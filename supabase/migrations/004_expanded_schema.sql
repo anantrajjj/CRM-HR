@@ -498,7 +498,7 @@ INSERT INTO methodology_frameworks (id, name, short_name, description, is_system
   ('mf00001-0000-0000-0000-000000000002', 'BANT', 'BANT', 'Budget, Authority, Need, Timeline', true),
   ('mf00001-0000-0000-0000-000000000003', 'SPIN', 'SPIN', 'Situation, Problem, Implication, Need-Payoff', true),
   ('mf00001-0000-0000-0000-000000000004', 'Sandler', 'Sandler', 'Bond, Rapport, Assess, Discover, Infer, Negotiate, Close', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- MEDDPICC Slots
 INSERT INTO methodology_slots (framework_id, code, label, description, is_required, slot_order) VALUES
@@ -546,7 +546,7 @@ INSERT INTO sales_support_queues (id, name, code, description, first_response_ho
   ('ssq0001-0000-0000-0000-000000000001', 'Deal Desk', 'DEAL', 'Pricing approvals, discount requests, deal structure', 4, 24),
   ('ssq0001-0000-0000-0000-000000000002', 'Legal & Contracts', 'LEGAL', 'MSA redlines, DPA reviews, compliance approvals', 8, 72),
   ('ssq0001-0000-0000-0000-000000000003', 'Technical Pre-Sales', 'TECH', 'Integration questions, POC support, architecture reviews', 4, 48)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- ============================================================
 -- SEED: ACCOUNT TIERS for existing orgs

@@ -13,7 +13,7 @@ INSERT INTO departments (id, name, code, description, is_active) VALUES
   ('d1000001-0000-0000-0000-000000000006', 'Operations', 'OPS', 'Supply chain and daily operations', true),
   ('d1000001-0000-0000-0000-000000000007', 'Product', 'PROD', 'Product management and design', true),
   ('d1000001-0000-0000-0000-000000000008', 'Customer Support', 'CS', 'Client support and issue resolution', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Designations
 INSERT INTO designations (id, name, code, department_id, is_active) VALUES
@@ -28,7 +28,7 @@ INSERT INTO designations (id, name, code, department_id, is_active) VALUES
   ('des00001-0000-0000-0000-000000000009', 'Finance Analyst', 'FA', 'd1000001-0000-0000-0000-000000000005', true),
   ('des00001-0000-0000-0000-000000000010', 'Product Manager', 'PM', 'd1000001-0000-0000-0000-000000000007', true),
   ('des00001-0000-0000-0000-000000000011', 'Support Engineer', 'CSE', 'd1000001-0000-0000-0000-000000000008', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Leave Types
 INSERT INTO leave_types (id, name, code, days_per_year, is_paid, is_active) VALUES
@@ -38,7 +38,7 @@ INSERT INTO leave_types (id, name, code, days_per_year, is_paid, is_active) VALU
   ('lt00001-0000-0000-0000-000000000004', 'Maternity Leave', 'ML', 182, true, true),
   ('lt00001-0000-0000-0000-000000000005', 'Paternity Leave', 'PL', 15, true, true),
   ('lt00001-0000-0000-0000-000000000006', 'Work From Home', 'WFH', 0, false, true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Shift Types
 INSERT INTO shift_types (id, name, code, start_time, end_time, break_minutes, is_active) VALUES
@@ -46,7 +46,7 @@ INSERT INTO shift_types (id, name, code, start_time, end_time, break_minutes, is
   ('st00001-0000-0000-0000-000000000002', 'Morning Shift', 'MOR', '06:00', '15:00', 60, true),
   ('st00001-0000-0000-0000-000000000003', 'Evening Shift', 'EVE', '14:00', '23:00', 60, true),
   ('st00001-0000-0000-0000-000000000004', 'Night Shift', 'NIT', '22:00', '07:00', 60, true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Lead Sources
 INSERT INTO lead_sources (id, name, code, description, is_active) VALUES
@@ -56,12 +56,12 @@ INSERT INTO lead_sources (id, name, code, description, is_active) VALUES
   ('ls00001-0000-0000-0000-000000000004', 'Trade Show', 'TS', 'Leads from exhibitions and trade fairs', true),
   ('ls00001-0000-0000-0000-000000000005', 'Cold Call', 'CC', 'Outbound telesales', true),
   ('ls00001-0000-0000-0000-000000000006', 'Google Ads', 'GA', 'Paid search campaigns', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Pipelines
 INSERT INTO pipelines (id, name, code, description, is_default, is_active) VALUES
   ('pl00001-0000-0000-0000-000000000001', 'Sales Pipeline', 'SALES', 'Standard sales pipeline', true, true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Deal Stages
 INSERT INTO deal_stages (id, name, code, pipeline_id, probability, stage_order, is_active) VALUES
@@ -71,13 +71,13 @@ INSERT INTO deal_stages (id, name, code, pipeline_id, probability, stage_order, 
   ('ds00001-0000-0000-0000-000000000004', 'Negotiation', 'NEG', 'pl00001-0000-0000-0000-000000000001', 75, 4, true),
   ('ds00001-0000-0000-0000-000000000005', 'Closed Won', 'WON', 'pl00001-0000-0000-0000-000000000001', 100, 5, true),
   ('ds00001-0000-0000-0000-000000000006', 'Closed Lost', 'LOST', 'pl00001-0000-0000-0000-000000000001', 0, 6, true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Currencies
 INSERT INTO currencies (id, name, code, symbol, is_default, is_active) VALUES
   ('cu00001-0000-0000-0000-000000000001', 'Indian Rupee', 'INR', '₹', true, true),
   ('cu00001-0000-0000-0000-000000000002', 'US Dollar', 'USD', '$', false, true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Organizations
 INSERT INTO organizations (id, name, industry, website, email, city, country, employee_count, is_active) VALUES
@@ -89,7 +89,7 @@ INSERT INTO organizations (id, name, industry, website, email, city, country, em
   ('org0001-0000-0000-0000-000000000006', 'Bharti Airtel', 'Telecom', 'https://www.airtel.in', 'care@airtel.in', 'New Delhi', 'India', 150000, true),
   ('org0001-0000-0000-0000-000000000007', 'Zomato', 'Food Tech', 'https://www.zomato.com', 'support@zomato.com', 'Gurugram', 'India', 5000, true),
   ('org0001-0000-0000-0000-000000000008', 'Freshworks', 'SaaS', 'https://www.freshworks.com', 'info@freshworks.com', 'Chennai', 'India', 5000, true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Contacts
 INSERT INTO contacts (id, organization_id, first_name, last_name, email, phone, job_title, is_lead, is_customer) VALUES
@@ -101,7 +101,7 @@ INSERT INTO contacts (id, organization_id, first_name, last_name, email, phone, 
   ('con0001-0000-0000-0000-000000000006', 'org0001-0000-0000-0000-000000000006', 'Ananya', 'Nair', 'ananya.nair@airtel.in', '+91 96543 21098', 'Product Manager', true, false),
   ('con0001-0000-0000-0000-000000000007', 'org0001-0000-0000-0000-000000000007', 'Deepak', 'Gupta', 'deepak.gupta@zomato.com', '+91 95432 10987', 'Engineering Lead', false, true),
   ('con0001-0000-0000-0000-000000000008', 'org0001-0000-0000-0000-000000000008', 'Kavita', 'Iyer', 'kavita.iyer@freshworks.com', '+91 94321 09876', 'VP Sales', true, false)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Employees
 INSERT INTO employees (id, employee_id, first_name, last_name, email, phone, department_id, designation_id, hire_date, employment_type, status) VALUES
@@ -115,7 +115,7 @@ INSERT INTO employees (id, employee_id, first_name, last_name, email, phone, dep
   ('emp0001-0000-0000-0000-000000000008', 'EMP-008', 'Megha', 'Kulkarni', 'megha.kulkarni@company.in', '+91 98765 88888', 'd1000001-0000-0000-0000-000000000007', 'des00001-0000-0000-0000-000000000010', '2021-09-12', 'full_time', 'active'),
   ('emp0001-0000-0000-0000-000000000009', 'EMP-009', 'Tarun', 'Bhatia', 'tarun.bhatia@company.in', '+91 98765 99999', 'd1000001-0000-0000-0000-000000000008', 'des00001-0000-0000-0000-000000000011', '2024-01-05', 'full_time', 'active'),
   ('emp0001-0000-0000-0000-000000000010', 'EMP-010', 'Ishita', 'Agarwal', 'ishita.agarwal@company.in', '+91 98765 00000', 'd1000001-0000-0000-0000-000000000006', 'des00001-0000-0000-0000-000000000007', '2024-04-10', 'full_time', 'active')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Leads
 INSERT INTO leads (id, contact_id, organization_id, lead_source_id, status, score) VALUES
@@ -123,7 +123,7 @@ INSERT INTO leads (id, contact_id, organization_id, lead_source_id, status, scor
   ('lea0001-0000-0000-0000-000000000002', 'con0001-0000-0000-0000-000000000005', 'org0001-0000-0000-0000-000000000005', 'ls00001-0000-0000-0000-000000000001', 'contacted', 70),
   ('lea0001-0000-0000-0000-000000000003', 'con0001-0000-0000-0000-000000000006', 'org0001-0000-0000-0000-000000000006', 'ls00001-0000-0000-0000-000000000002', 'new', 60),
   ('lea0001-0000-0000-0000-000000000004', 'con0001-0000-0000-0000-000000000008', 'org0001-0000-0000-0000-000000000008', 'ls00001-0000-0000-0000-000000000006', 'new', 45)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Deals
 INSERT INTO deals (id, title, organization_id, contact_id, pipeline_id, stage_id, amount, currency_id, probability, close_date, status) VALUES
@@ -132,7 +132,7 @@ INSERT INTO deals (id, title, organization_id, contact_id, pipeline_id, stage_id
   ('dea0001-0000-0000-0000-000000000003', 'HDFC Mobile Banking App', 'org0001-0000-0000-0000-000000000004', 'con0001-0000-0000-0000-000000000004', 'pl00001-0000-0000-0000-000000000001', 'ds00001-0000-0000-0000-000000000005', 3200000, 'cu00001-0000-0000-0000-000000000001', 100, '2026-06-01', 'won'),
   ('dea0001-0000-0000-0000-000000000004', 'Zomato Analytics Platform', 'org0001-0000-0000-0000-000000000007', 'con0001-0000-0000-0000-000000000007', 'pl00001-0000-0000-0000-000000000001', 'ds00001-0000-0000-0000-000000000002', 1800000, 'cu00001-0000-0000-0000-000000000001', 25, '2026-09-30', 'open'),
   ('dea0001-0000-0000-0000-000000000005', 'Wipro ERP System', 'org0001-0000-0000-0000-000000000005', 'con0001-0000-0000-0000-000000000005', 'pl00001-0000-0000-0000-000000000001', 'ds00001-0000-0000-0000-000000000006', 6000000, 'cu00001-0000-0000-0000-000000000001', 0, '2026-05-01', 'lost')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Leave Requests
 INSERT INTO leave_requests (id, employee_id, leave_type_id, start_date, end_date, days, reason, status) VALUES
@@ -141,7 +141,7 @@ INSERT INTO leave_requests (id, employee_id, leave_type_id, start_date, end_date
   ('lr00001-0000-0000-0000-000000000003', 'emp0001-0000-0000-0000-000000000003', 'lt00001-0000-0000-0000-000000000001', '2026-06-25', '2026-06-27', 3, 'Vacation to Goa with family', 'pending'),
   ('lr00001-0000-0000-0000-000000000004', 'emp0001-0000-0000-0000-000000000005', 'lt00001-0000-0000-0000-000000000003', '2026-07-01', '2026-07-05', 5, 'Personal work', 'pending'),
   ('lr00001-0000-0000-0000-000000000005', 'emp0001-0000-0000-0000-000000000004', 'lt00001-0000-0000-0000-000000000001', '2026-06-16', '2026-06-16', 1, 'Temple visit', 'approved')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Help Desk Tickets
 INSERT INTO help_desk_tickets (id, ticket_number, subject, description, category, priority, status, raised_by_type, raised_by_id) VALUES
@@ -150,7 +150,7 @@ INSERT INTO help_desk_tickets (id, ticket_number, subject, description, category
   ('tkt0001-0000-0000-0000-000000000003', 'TKT-003', 'Salary slip not received', 'Did not receive salary slip for May 2026. Please check.', 'HR', 'medium', 'open', 'employee', 'emp0001-0000-0000-0000-000000000006'),
   ('tkt0001-0000-0000-0000-000000000004', 'TKT-004', 'Access to Jira board needed', 'Need access to the ABC project Jira board for sprint planning.', 'IT', 'low', 'resolved', 'employee', 'emp0001-0000-0000-0000-000000000008'),
   ('tkt0001-0000-0000-0000-000000000005', 'TKT-005', 'AC not working in conference room', 'The AC in Banyan Hall is not cooling properly.', 'Facilities', 'medium', 'open', 'employee', 'emp0001-0000-0000-0000-000000000009')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Attendance (recent entries)
 INSERT INTO attendance (employee_id, date, check_in, check_out, status, hours_worked) VALUES
@@ -173,7 +173,7 @@ INSERT INTO goals (id, employee_id, title, description, category, start_date, du
   ('goa0001-0000-0000-0000-000000000003', 'emp0001-0000-0000-0000-000000000002', 'Reduce attrition to under 10%', 'Implement new retention strategies', 'performance', '2026-01-01', '2026-12-31', 75, 'in_progress'),
   ('goa0001-0000-0000-0000-000000000004', 'emp0001-0000-0000-0000-000000000008', 'Launch product analytics dashboard', 'Build and deploy real-time analytics for product team', 'performance', '2026-05-01', '2026-08-31', 30, 'in_progress'),
   ('goa0001-0000-0000-0000-000000000005', 'emp0001-0000-0000-0000-000000000005', 'Migrate 3 services to microservices', 'Break monolith into microservices architecture', 'development', '2026-03-01', '2026-09-30', 55, 'in_progress')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Training Courses
 INSERT INTO training_courses (id, title, code, description, duration_hours, is_mandatory, is_active) VALUES
@@ -182,7 +182,7 @@ INSERT INTO training_courses (id, title, code, description, duration_hours, is_m
   ('tc00001-0000-0000-0000-000000000003', 'Leadership Workshop', 'LDR', 'Building effective leadership skills', 8, false, true),
   ('tc00001-0000-0000-0000-000000000004', 'Advanced Excel', 'AEXL', 'Master advanced Excel for data analysis', 6, false, true),
   ('tc00001-0000-0000-0000-000000000005', 'AWS Cloud Fundamentals', 'AWS', 'Introduction to AWS cloud services', 10, false, true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Campaigns
 INSERT INTO campaigns (id, name, type, status, start_date, end_date, budget, expected_revenue, description) VALUES
@@ -190,7 +190,7 @@ INSERT INTO campaigns (id, name, type, status, start_date, end_date, budget, exp
   ('cmp0001-0000-0000-0000-000000000002', 'LinkedIn Thought Leadership', 'social', 'in_progress', '2026-06-01', '2026-08-31', 200000, 800000, 'Weekly posts and articles on industry trends'),
   ('cmp0001-0000-0000-0000-000000000003', 'Bangalore Tech Summit', 'event', 'planned', '2026-09-10', '2026-09-12', 1500000, 5000000, 'Exhibition at BIEC, Bangalore'),
   ('cmp0001-0000-0000-0000-000000000004', 'Google Ads - Enterprise', 'ads', 'completed', '2026-03-01', '2026-05-31', 300000, 1200000, 'PPC campaign targeting enterprise keywords')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Products
 INSERT INTO products (id, name, code, description, unit_price, currency_id, is_active) VALUES
@@ -198,4 +198,4 @@ INSERT INTO products (id, name, code, description, unit_price, currency_id, is_a
   ('prd0001-0000-0000-0000-000000000002', 'DataInsight Analytics', 'DIA', 'Real-time business analytics suite', 15000, 'cu00001-0000-0000-0000-000000000001', true),
   ('prd0001-0000-0000-0000-000000000003', 'SecureShield Firewall', 'SSF', 'Next-gen network security appliance', 50000, 'cu00001-0000-0000-0000-000000000001', true),
   ('prd0001-0000-0000-0000-000000000004', 'WorkFlow Automation', 'WFA', 'Business process automation platform', 20000, 'cu00001-0000-0000-0000-000000000001', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
