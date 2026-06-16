@@ -494,58 +494,58 @@ CREATE TABLE IF NOT EXISTS program_attributions (
 -- SEED: METHODOLOGY FRAMEWORKS
 -- ============================================================
 INSERT INTO methodology_frameworks (id, name, short_name, description, is_system) VALUES
-  ('mf00001-0000-0000-0000-000000000001', 'MEDDPICC', 'MEDDPICC', 'Metrics, Economic Buyer, Decision Criteria, Decision Process, Paper Process, Identify Pain, Champion, Competition', true),
-  ('mf00001-0000-0000-0000-000000000002', 'BANT', 'BANT', 'Budget, Authority, Need, Timeline', true),
-  ('mf00001-0000-0000-0000-000000000003', 'SPIN', 'SPIN', 'Situation, Problem, Implication, Need-Payoff', true),
-  ('mf00001-0000-0000-0000-000000000004', 'Sandler', 'Sandler', 'Bond, Rapport, Assess, Discover, Infer, Negotiate, Close', true)
+  ('b4000001-0000-4000-8000-000000000001', 'MEDDPICC', 'MEDDPICC', 'Metrics, Economic Buyer, Decision Criteria, Decision Process, Paper Process, Identify Pain, Champion, Competition', true),
+  ('b4000001-0000-4000-8000-000000000002', 'BANT', 'BANT', 'Budget, Authority, Need, Timeline', true),
+  ('b4000001-0000-4000-8000-000000000003', 'SPIN', 'SPIN', 'Situation, Problem, Implication, Need-Payoff', true),
+  ('b4000001-0000-4000-8000-000000000004', 'Sandler', 'Sandler', 'Bond, Rapport, Assess, Discover, Infer, Negotiate, Close', true)
 ON CONFLICT DO NOTHING;
 
 -- MEDDPICC Slots
 INSERT INTO methodology_slots (framework_id, code, label, description, is_required, slot_order) VALUES
-  ('mf00001-0000-0000-0000-000000000001', 'M', 'Metrics', 'What measurable outcomes will the solution deliver?', true, 1),
-  ('mf00001-0000-0000-0000-000000000001', 'EB', 'Economic Buyer', 'Who controls the budget and can approve the purchase?', true, 2),
-  ('mf00001-0000-0000-0000-000000000001', 'DC', 'Decision Criteria', 'What criteria will the customer use to evaluate solutions?', true, 3),
-  ('mf00001-0000-0000-0000-000000000001', 'DP', 'Decision Process', 'What steps does the customer follow to make a decision?', true, 4),
-  ('mf00001-0000-0000-0000-000000000001', 'PP', 'Paper Process', 'What is the legal/procurement process for signing?', true, 5),
-  ('mf00001-0000-0000-0000-000000000001', 'IP', 'Identify Pain', 'What business pain will the solution address?', true, 6),
-  ('mf00001-0000-0000-0000-000000000001', 'CH', 'Champion', 'Who inside the account is selling on our behalf?', true, 7),
-  ('mf00001-0000-0000-0000-000000000001', 'C', 'Competition', 'Who are we competing against and what is our differentiation?', true, 8)
+  ('b4000001-0000-4000-8000-000000000001', 'M', 'Metrics', 'What measurable outcomes will the solution deliver?', true, 1),
+  ('b4000001-0000-4000-8000-000000000001', 'EB', 'Economic Buyer', 'Who controls the budget and can approve the purchase?', true, 2),
+  ('b4000001-0000-4000-8000-000000000001', 'DC', 'Decision Criteria', 'What criteria will the customer use to evaluate solutions?', true, 3),
+  ('b4000001-0000-4000-8000-000000000001', 'DP', 'Decision Process', 'What steps does the customer follow to make a decision?', true, 4),
+  ('b4000001-0000-4000-8000-000000000001', 'PP', 'Paper Process', 'What is the legal/procurement process for signing?', true, 5),
+  ('b4000001-0000-4000-8000-000000000001', 'IP', 'Identify Pain', 'What business pain will the solution address?', true, 6),
+  ('b4000001-0000-4000-8000-000000000001', 'CH', 'Champion', 'Who inside the account is selling on our behalf?', true, 7),
+  ('b4000001-0000-4000-8000-000000000001', 'C', 'Competition', 'Who are we competing against and what is our differentiation?', true, 8)
 ON CONFLICT DO NOTHING;
 
 -- BANT Slots
 INSERT INTO methodology_slots (framework_id, code, label, description, is_required, slot_order) VALUES
-  ('mf00001-0000-0000-0000-000000000002', 'B', 'Budget', 'Has a budget been identified and allocated?', true, 1),
-  ('mf00001-0000-0000-0000-000000000002', 'A', 'Authority', 'Are we talking to the decision-maker?', true, 2),
-  ('mf00001-0000-0000-0000-000000000002', 'N', 'Need', 'Is there a clearly articulated business need?', true, 3),
-  ('mf00001-0000-0000-0000-000000000002', 'T', 'Timeline', 'When does the customer need a solution in place?', true, 4)
+  ('b4000001-0000-4000-8000-000000000002', 'B', 'Budget', 'Has a budget been identified and allocated?', true, 1),
+  ('b4000001-0000-4000-8000-000000000002', 'A', 'Authority', 'Are we talking to the decision-maker?', true, 2),
+  ('b4000001-0000-4000-8000-000000000002', 'N', 'Need', 'Is there a clearly articulated business need?', true, 3),
+  ('b4000001-0000-4000-8000-000000000002', 'T', 'Timeline', 'When does the customer need a solution in place?', true, 4)
 ON CONFLICT DO NOTHING;
 
 -- SPIN Slots
 INSERT INTO methodology_slots (framework_id, code, label, description, is_required, slot_order) VALUES
-  ('mf00001-0000-0000-0000-000000000003', 'S', 'Situation', 'What is the current state of the prospect?', true, 1),
-  ('mf00001-0000-0000-0000-000000000003', 'P', 'Problem', 'What problems or challenges are they facing?', true, 2),
-  ('mf00001-0000-0000-0000-000000000003', 'I', 'Implication', 'What are the consequences of not solving the problem?', true, 3),
-  ('mf00001-0000-0000-0000-000000000003', 'NP', 'Need-Payoff', 'What value would solving the problem deliver?', true, 4)
+  ('b4000001-0000-4000-8000-000000000003', 'S', 'Situation', 'What is the current state of the prospect?', true, 1),
+  ('b4000001-0000-4000-8000-000000000003', 'P', 'Problem', 'What problems or challenges are they facing?', true, 2),
+  ('b4000001-0000-4000-8000-000000000003', 'I', 'Implication', 'What are the consequences of not solving the problem?', true, 3),
+  ('b4000001-0000-4000-8000-000000000003', 'NP', 'Need-Payoff', 'What value would solving the problem deliver?', true, 4)
 ON CONFLICT DO NOTHING;
 
 -- Sandler Slots
 INSERT INTO methodology_slots (framework_id, code, label, description, is_required, slot_order) VALUES
-  ('mf00001-0000-0000-0000-000000000004', 'B', 'Bond', 'Establish personal rapport and trust', true, 1),
-  ('mf00001-0000-0000-0000-000000000004', 'R', 'Rapport', 'Build professional credibility and connection', true, 2),
-  ('mf00001-0000-0000-0000-000000000004', 'A', 'Assess', 'Understand the current situation and pain', true, 3),
-  ('mf00001-0000-0000-0000-000000000004', 'D', 'Discover', 'Uncover the deeper business issues', true, 4),
-  ('mf00001-0000-0000-0000-000000000004', 'I', 'Infer', 'Help prospect understand the cost of inaction', true, 5),
-  ('mf00001-0000-0000-0000-000000000004', 'N', 'Negotiate', 'Agree on terms and pricing', true, 6),
-  ('mf00001-0000-0000-0000-000000000004', 'C', 'Close', 'Secure the commitment', true, 7)
+  ('b4000001-0000-4000-8000-000000000004', 'B', 'Bond', 'Establish personal rapport and trust', true, 1),
+  ('b4000001-0000-4000-8000-000000000004', 'R', 'Rapport', 'Build professional credibility and connection', true, 2),
+  ('b4000001-0000-4000-8000-000000000004', 'A', 'Assess', 'Understand the current situation and pain', true, 3),
+  ('b4000001-0000-4000-8000-000000000004', 'D', 'Discover', 'Uncover the deeper business issues', true, 4),
+  ('b4000001-0000-4000-8000-000000000004', 'I', 'Infer', 'Help prospect understand the cost of inaction', true, 5),
+  ('b4000001-0000-4000-8000-000000000004', 'N', 'Negotiate', 'Agree on terms and pricing', true, 6),
+  ('b4000001-0000-4000-8000-000000000004', 'C', 'Close', 'Secure the commitment', true, 7)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
 -- SEED: SALES SUPPORT QUEUES
 -- ============================================================
 INSERT INTO sales_support_queues (id, name, code, description, first_response_hours, resolution_hours) VALUES
-  ('ssq0001-0000-0000-0000-000000000001', 'Deal Desk', 'DEAL', 'Pricing approvals, discount requests, deal structure', 4, 24),
-  ('ssq0001-0000-0000-0000-000000000002', 'Legal & Contracts', 'LEGAL', 'MSA redlines, DPA reviews, compliance approvals', 8, 72),
-  ('ssq0001-0000-0000-0000-000000000003', 'Technical Pre-Sales', 'TECH', 'Integration questions, POC support, architecture reviews', 4, 48)
+  ('c4000001-0000-4000-8000-000000000001', 'Deal Desk', 'DEAL', 'Pricing approvals, discount requests, deal structure', 4, 24),
+  ('c4000001-0000-4000-8000-000000000002', 'Legal & Contracts', 'LEGAL', 'MSA redlines, DPA reviews, compliance approvals', 8, 72),
+  ('c4000001-0000-4000-8000-000000000003', 'Technical Pre-Sales', 'TECH', 'Integration questions, POC support, architecture reviews', 4, 48)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
