@@ -53,6 +53,7 @@ const navItems: NavItem[] = [
   { label: 'Timesheets', href: '/hr/timesheets', icon: FileText, module: 'hr' },
   { label: 'Training', href: '/hr/training', icon: GraduationCap, module: 'hr' },
   { label: 'Goals', href: '/hr/goals', icon: Target, module: 'hr' },
+  { label: 'Tickets', href: '/hr/tickets', icon: HelpCircle, module: 'hr' },
   // Reports
   { label: 'Reports', href: '/reports', icon: BarChart3, module: 'reports' },
   // Settings
