@@ -43,6 +43,8 @@ const navItems: NavItem[] = [
   { label: 'Contacts', href: '/crm/contacts', icon: Contact, module: 'crm' },
   { label: 'Organizations', href: '/crm/organizations', icon: Building2, module: 'crm' },
   { label: 'Deals', href: '/crm/deals', icon: DollarSign, module: 'crm' },
+  { label: 'Products', href: '/crm/products', icon: Briefcase, module: 'crm' },
+  { label: 'Quotes', href: '/crm/quotes', icon: FileText, module: 'crm' },
   { label: 'Campaigns', href: '/crm/campaigns', icon: BarChart3, module: 'crm' },
   // HR
   { label: 'Employees', href: '/hr/employees', icon: Users, module: 'hr' },
