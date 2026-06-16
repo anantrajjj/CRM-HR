@@ -23,22 +23,26 @@ export default function SignupPage() {
     setError('')
     setSuccess('')
 
-    const supabase = createClient()
-    const { error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
-        },
-      },
-    })
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, fullName }),
+      })
+      const data = await res.json()
 
-    if (authError) {
-      setError(authError.message)
-      setLoading(false)
-    } else {
-      setSuccess('Account created! Check your email for verification link.')
+      if (data.error) {
+        setError(data.error)
+        setLoading(false)
+      } else if (data.session) {
+        router.push('/dashboard')
+        router.refresh()
+      } else {
+        setSuccess('Account created! Signing you in...')
+        setLoading(false)
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
       setLoading(false)
     }
   }

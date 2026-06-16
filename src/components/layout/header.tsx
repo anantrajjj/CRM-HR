@@ -1,19 +1,33 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Menu, Bell, Search, User, ChevronDown, LogOut } from 'lucide-react'
+import { useEffect, useState, useRef } from 'react'
+import { Menu, Bell, User, ChevronDown, LogOut, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useAppStore } from '@/stores/app-store'
 import { Button } from '@/components/ui/button'
 import { logout } from '@/lib/auth'
+import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
+
+interface Notification {
+  id: string
+  title: string
+  description: string
+  type: 'ticket' | 'leave' | 'deal'
+  href: string
+  created_at: string
+}
 
 export function Header() {
   const { sidebarOpen, toggleSidebar, setCurrentUser, currentUser } = useAppStore()
   const [showUserMenu, setShowUserMenu] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const notifRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const supabase = createClient()
-    
+
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
@@ -27,7 +41,67 @@ export function Header() {
     }
 
     getUser()
+
+    const fetchNotifications = async () => {
+      const notifs: Notification[] = []
+
+      const { data: tickets } = await supabase
+        .from('help_desk_tickets')
+        .select('id, ticket_number, subject, priority, status, created_at')
+        .order('created_at', { ascending: false })
+        .limit(5)
+
+      if (tickets) {
+        tickets.forEach(t => {
+          notifs.push({
+            id: t.id,
+            title: `${t.ticket_number}: ${t.subject}`,
+            description: `Priority: ${t.priority} • Status: ${t.status.replace('_', ' ')}`,
+            type: 'ticket',
+            href: '/hr/tickets',
+            created_at: t.created_at,
+          })
+        })
+      }
+
+      const { data: leaves } = await supabase
+        .from('leave_requests')
+        .select('id, start_date, end_date, status, employees(first_name, last_name), leave_types(name)')
+        .order('created_at', { ascending: false })
+        .limit(5)
+
+      if (leaves) {
+        leaves.forEach((l: any) => {
+          const empName = l.employees ? `${l.employees.first_name} ${l.employees.last_name}` : 'Someone'
+          const leaveName = l.leave_types?.name || 'Leave'
+          notifs.push({
+            id: l.id,
+            title: `${empName} — ${leaveName}`,
+            description: `${new Date(l.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} • ${l.status}`,
+            type: 'leave',
+            href: '/hr/leave',
+            created_at: l.start_date,
+          })
+        })
+      }
+
+      notifs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      setNotifications(notifs.slice(0, 8))
+    }
+
+    fetchNotifications()
   }, [setCurrentUser])
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotifications(false)
+      }
+    }
+    if (showNotifications) document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [showNotifications])
 
   return (
     <header className="coda-header">
@@ -40,25 +114,72 @@ export function Header() {
         >
           <Menu className="w-5 h-5" />
         </Button>
-
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-pebble" />
-          <input
-            type="text"
-            placeholder="Search across all modules..."
-            className="coda-input pl-10 w-96"
-          />
-        </div>
       </div>
 
       <div className="flex items-center gap-4">
         {/* Notifications */}
-        <button className="relative p-2 hover:bg-bone rounded-[9px] transition-colors">
-          <Bell className="w-5 h-5 text-olive-slate" />
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-            3
-          </span>
-        </button>
+        <div className="relative" ref={notifRef}>
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="relative p-2 hover:bg-bone rounded-[9px] transition-colors"
+          >
+            <Bell className="w-5 h-5 text-olive-slate" />
+            {notifications.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-medium">
+                {notifications.length > 9 ? '9+' : notifications.length}
+              </span>
+            )}
+          </button>
+
+          {showNotifications && (
+            <div className="absolute right-0 top-full mt-2 w-96 bg-pure-white border border-sage-mist rounded-[13px] shadow-lg z-50 overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-sage-mist">
+                <h3 className="font-semibold text-charcoal text-sm">Notifications</h3>
+                <button
+                  onClick={() => setShowNotifications(false)}
+                  className="text-pebble hover:text-charcoal"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="max-h-80 overflow-y-auto">
+                {notifications.length === 0 ? (
+                  <p className="text-sm text-pebble text-center py-8">No notifications</p>
+                ) : (
+                  notifications.map(n => (
+                    <Link
+                      key={n.id}
+                      href={n.href}
+                      onClick={() => setShowNotifications(false)}
+                      className="flex items-start gap-3 px-4 py-3 hover:bg-bone transition-colors border-b border-sage-mist/50 last:border-0"
+                    >
+                      <div className={`w-2 h-2 mt-2 rounded-full shrink-0 ${
+                        n.type === 'ticket' ? 'bg-red-400' :
+                        n.type === 'leave' ? 'bg-amber-400' :
+                        'bg-green-400'
+                      }`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-charcoal truncate">{n.title}</p>
+                        <p className="text-xs text-pebble truncate">{n.description}</p>
+                      </div>
+                    </Link>
+                  ))
+                )}
+              </div>
+              {notifications.length > 0 && (
+                <div className="px-4 py-2 border-t border-sage-mist text-center">
+                  <Link
+                    href="/hr/tickets"
+                    onClick={() => setShowNotifications(false)}
+                    className="text-xs font-medium text-forest-depths hover:underline"
+                  >
+                    View all notifications
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* User Menu */}
         <div className="relative">
@@ -80,7 +201,6 @@ export function Header() {
             <ChevronDown className="w-4 h-4 text-pebble" />
           </button>
 
-          {/* Dropdown Menu */}
           {showUserMenu && (
             <div className="absolute right-0 top-full mt-2 w-48 bg-pure-white border border-sage-mist rounded-[13px] shadow-lg z-50">
               <div className="p-2">

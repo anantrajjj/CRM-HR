@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard,
   Building2,
@@ -27,6 +27,8 @@ import {
   CheckCircle,
   ChevronDown,
   ChevronRight,
+  Search,
+  X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/stores/app-store'
@@ -118,9 +120,9 @@ const navGroups: NavGroup[] = [
 
 export function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const { sidebarOpen } = useAppStore()
-
-  // Auto-expand group that contains current route, plus always show dashboard
+  const [searchQuery, setSearchQuery] = useState('')
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
@@ -130,7 +132,6 @@ export function Sidebar() {
         updated[group.key] = true
       }
     }
-    // Always keep dashboard expanded
     updated['dashboard'] = true
     setExpanded(prev => ({ ...updated, ...prev }))
   }, [pathname])
@@ -139,12 +140,34 @@ export function Sidebar() {
     setExpanded(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
+  const allNavItems = useMemo(() => {
+    return navGroups.flatMap(group =>
+      group.items.map(item => ({
+        ...item,
+        groupLabel: group.label,
+      }))
+    )
+  }, [])
+
+  const isSearching = searchQuery.trim().length > 0
+  const filteredItems = isSearching
+    ? allNavItems.filter(item =>
+        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.groupLabel.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : []
+
+  const handleSearchSelect = (href: string) => {
+    setSearchQuery('')
+    router.push(href)
+  }
+
   if (!sidebarOpen) return null
 
   return (
     <aside className="coda-sidebar flex flex-col h-screen overflow-y-auto">
       {/* Logo */}
-      <div className="mb-8">
+      <div className="mb-6">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 bg-charcoal rounded-[9px] flex items-center justify-center">
             <span className="text-pure-white font-bold text-sm">C</span>
@@ -155,69 +178,119 @@ export function Sidebar() {
         </Link>
       </div>
 
+      {/* Search */}
+      <div className="relative mb-6">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-pebble" />
+        <input
+          type="text"
+          placeholder="Search modules..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-10 pl-10 pr-9 text-sm border border-sage-mist rounded-[9px] bg-pure-white text-charcoal placeholder:text-pebble focus:outline-none focus:ring-2 focus:ring-forest-depths/20 focus:border-forest-depths transition-all"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-pebble hover:text-charcoal"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
+      {/* Search Results */}
+      {isSearching && (
+        <div className="mb-4">
+          {filteredItems.length === 0 ? (
+            <p className="text-sm text-pebble text-center py-6">No modules found</p>
+          ) : (
+            <ul className="space-y-1">
+              {filteredItems.map(item => {
+                const Icon = item.icon
+                return (
+                  <li key={item.href}>
+                    <button
+                      onClick={() => handleSearchSelect(item.href)}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-[9px] text-sm text-olive-slate hover:bg-bone hover:text-charcoal transition-colors text-left"
+                    >
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <span className="block truncate">{item.label}</span>
+                        <span className="text-[10px] text-pebble">{item.groupLabel}</span>
+                      </div>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+          <div className="h-px bg-sage-mist mt-4" />
+        </div>
+      )}
+
       {/* Navigation */}
-      <nav className="flex-1 space-y-1">
-        {navGroups.map(group => {
-          const isExpanded = expanded[group.key] ?? false
-          const isActiveGroup = group.items.some(
-            item => pathname === item.href || pathname.startsWith(item.href + '/')
-          )
+      {!isSearching && (
+        <nav className="flex-1 space-y-1">
+          {navGroups.map(group => {
+            const isExpanded = expanded[group.key] ?? false
+            const isActiveGroup = group.items.some(
+              item => pathname === item.href || pathname.startsWith(item.href + '/')
+            )
 
-          return (
-            <div key={group.key}>
-              {/* Group header — clickable dropdown */}
-              <button
-                onClick={() => toggleGroup(group.key)}
-                className={cn(
-                  'w-full flex items-center gap-2 px-3 py-2 rounded-[9px] text-sm transition-colors',
-                  isActiveGroup
-                    ? 'text-charcoal font-medium'
-                    : 'text-olive-slate hover:bg-bone hover:text-charcoal'
-                )}
-              >
-                {isExpanded ? (
-                  <ChevronDown className="w-3.5 h-3.5 shrink-0" />
-                ) : (
-                  <ChevronRight className="w-3.5 h-3.5 shrink-0" />
-                )}
-                <span className="font-mono text-xs uppercase tracking-wider">
-                  {group.label}
-                </span>
-                <div className="flex-1 h-px bg-sage-mist ml-2" />
-                {group.key !== 'dashboard' && group.key !== 'reports' && group.key !== 'settings' && (
-                  <span className="text-[10px] text-pebble font-mono mr-1">{group.items.length}</span>
-                )}
-              </button>
+            return (
+              <div key={group.key}>
+                <button
+                  onClick={() => toggleGroup(group.key)}
+                  className={cn(
+                    'w-full flex items-center gap-2 px-3 py-2 rounded-[9px] text-sm transition-colors',
+                    isActiveGroup
+                      ? 'text-charcoal font-medium'
+                      : 'text-olive-slate hover:bg-bone hover:text-charcoal'
+                  )}
+                >
+                  {isExpanded ? (
+                    <ChevronDown className="w-3.5 h-3.5 shrink-0" />
+                  ) : (
+                    <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+                  )}
+                  <span className="font-mono text-xs uppercase tracking-wider">
+                    {group.label}
+                  </span>
+                  <div className="flex-1 h-px bg-sage-mist ml-2" />
+                  {group.key !== 'dashboard' && group.key !== 'reports' && group.key !== 'settings' && (
+                    <span className="text-[10px] text-pebble font-mono mr-1">{group.items.length}</span>
+                  )}
+                </button>
 
-              {/* Group items — collapsible */}
-              {isExpanded && (
-                <ul className="space-y-1 mt-1 mb-2 pl-2">
-                  {group.items.map(item => {
-                    const isActive = pathname === item.href
-                    const Icon = item.icon
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className={cn(
-                            'flex items-center gap-3 px-3 py-2 rounded-[9px] text-sm transition-colors',
-                            isActive
-                              ? 'bg-charcoal text-pure-white'
-                              : 'text-olive-slate hover:bg-bone hover:text-charcoal'
-                          )}
-                        >
-                          <Icon className="w-4 h-4" />
-                          <span>{item.label}</span>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
-            </div>
-          )
-        })}
-      </nav>
+                {isExpanded && (
+                  <ul className="space-y-1 mt-1 mb-2 pl-2">
+                    {group.items.map(item => {
+                      const isActive = pathname === item.href
+                      const Icon = item.icon
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              'flex items-center gap-3 px-3 py-2 rounded-[9px] text-sm transition-colors',
+                              isActive
+                                ? 'bg-charcoal text-pure-white'
+                                : 'text-olive-slate hover:bg-bone hover:text-charcoal'
+                            )}
+                          >
+                            <Icon className="w-4 h-4" />
+                            <span>{item.label}</span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </div>
+            )
+          })}
+        </nav>
+      )}
 
       {/* Footer */}
       <div className="mt-8 pt-4 border-t border-sage-mist">
