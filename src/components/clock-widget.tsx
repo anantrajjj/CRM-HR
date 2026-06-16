@@ -22,6 +22,7 @@ export function ClockWidget() {
   const [loading, setLoading] = useState(true)
   const [punching, setPunching] = useState(false)
   const [elapsed, setElapsed] = useState('00:00:00')
+  const [statusMsg, setStatusMsg] = useState('')
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -49,25 +50,69 @@ export function ClockWidget() {
     }
   }, [todayRecord])
 
-  const fetchTodayAttendance = async () => {
-    const supabase = createClient()
-    const today = new Date().toISOString().split('T')[0]
-
+  const getOrCreateEmployee = async (supabase: ReturnType<typeof createClient>) => {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setLoading(false); return }
+    if (!user) return null
 
-    const { data: empData } = await supabase
+    // Try to find existing employee by user_id
+    let { data: emp } = await supabase
       .from('employees')
       .select('id')
       .eq('user_id', user.id)
       .single()
 
-    if (!empData) { setLoading(false); return }
+    if (emp) return emp.id
+
+    // Try by email
+    const { data: empByEmail } = await supabase
+      .from('employees')
+      .select('id')
+      .eq('email', user.email || '')
+      .single()
+
+    if (empByEmail) {
+      // Link user_id to existing employee
+      await supabase
+        .from('employees')
+        .update({ user_id: user.id })
+        .eq('id', empByEmail.id)
+      return empByEmail.id
+    }
+
+    // Auto-create employee record for this user
+    const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'
+    const [firstName, ...rest] = name.split(' ')
+    const lastName = rest.join(' ') || firstName
+
+    const { data: newEmp } = await supabase
+      .from('employees')
+      .insert({
+        employee_id: `EMP-${Date.now().toString(36).toUpperCase()}`,
+        user_id: user.id,
+        first_name: firstName,
+        last_name: lastName,
+        email: user.email || '',
+        hire_date: new Date().toISOString().split('T')[0],
+        employment_type: 'full_time',
+        status: 'active',
+      })
+      .select('id')
+      .single()
+
+    return newEmp?.id || null
+  }
+
+  const fetchTodayAttendance = async () => {
+    const supabase = createClient()
+    const today = new Date().toISOString().split('T')[0]
+
+    const employeeId = await getOrCreateEmployee(supabase)
+    if (!employeeId) { setLoading(false); return }
 
     const { data } = await supabase
       .from('attendance')
       .select('*')
-      .eq('employee_id', empData.id)
+      .eq('employee_id', employeeId)
       .eq('date', today)
       .single()
 
@@ -77,26 +122,23 @@ export function ClockWidget() {
 
   const handlePunchIn = async () => {
     setPunching(true)
+    setStatusMsg('')
     const supabase = createClient()
     const now = new Date()
     const today = now.toISOString().split('T')[0]
     const timeStr = now.toTimeString().split(' ')[0]
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setPunching(false); return }
-
-    const { data: empData } = await supabase
-      .from('employees')
-      .select('id')
-      .eq('user_id', user.id)
-      .single()
-
-    if (!empData) { setPunching(false); return }
+    const employeeId = await getOrCreateEmployee(supabase)
+    if (!employeeId) {
+      setStatusMsg('Could not find or create employee record')
+      setPunching(false)
+      return
+    }
 
     const { data, error } = await supabase
       .from('attendance')
       .insert({
-        employee_id: empData.id,
+        employee_id: employeeId,
         date: today,
         check_in: `${today}T${timeStr}`,
         status: 'present',
@@ -104,8 +146,11 @@ export function ClockWidget() {
       .select()
       .single()
 
-    if (!error && data) {
+    if (error) {
+      setStatusMsg(`Error: ${error.message}`)
+    } else if (data) {
       setTodayRecord(data)
+      setStatusMsg('Clocked in successfully!')
     }
     setPunching(false)
   }
@@ -113,6 +158,7 @@ export function ClockWidget() {
   const handlePunchOut = async () => {
     if (!todayRecord) return
     setPunching(true)
+    setStatusMsg('')
     const supabase = createClient()
     const now = new Date()
     const timeStr = now.toTimeString().split(' ')[0]
@@ -130,8 +176,11 @@ export function ClockWidget() {
       .select()
       .single()
 
-    if (!error && data) {
+    if (error) {
+      setStatusMsg(`Error: ${error.message}`)
+    } else if (data) {
       setTodayRecord(data)
+      setStatusMsg(`Clocked out! ${hoursWorked}h worked today.`)
     }
     setPunching(false)
   }
@@ -214,6 +263,11 @@ export function ClockWidget() {
             )}
           </div>
         </div>
+        {statusMsg && (
+          <p className={`text-sm mt-2 ${statusMsg.startsWith('Error') ? 'text-wine-shadow' : 'text-forest-depths'}`}>
+            {statusMsg}
+          </p>
+        )}
       </CardContent>
     </Card>
   )

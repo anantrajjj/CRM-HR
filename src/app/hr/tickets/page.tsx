@@ -137,6 +137,18 @@ export default function TicketsPage() {
 
     const now = new Date().toISOString()
 
+    // Get current user's employee record
+    const { data: { user } } = await supabase.auth.getUser()
+    let raisedById: string | null = null
+    if (user) {
+      const { data: emp } = await supabase
+        .from('employees')
+        .select('id')
+        .eq('user_id', user.id)
+        .single()
+      if (emp) raisedById = emp.id
+    }
+
     if (editingTicket) {
       const updateData: Record<string, unknown> = {
         subject: formData.subject,
@@ -178,7 +190,7 @@ export default function TicketsPage() {
           status: formData.status,
           assigned_to: formData.assigned_to || null,
           raised_by_type: 'employee',
-          raised_by_id: null,
+          raised_by_id: raisedById || user?.id || '00000000-0000-0000-0000-000000000000',
         })
 
       if (!error) {
