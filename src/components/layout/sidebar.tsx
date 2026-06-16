@@ -18,6 +18,12 @@ import {
   Target,
   DollarSign,
   Contact,
+  TrendingUp,
+  MapPin,
+  Award,
+  Video,
+  Filter,
+  CheckCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/stores/app-store'
@@ -46,6 +52,18 @@ const navItems: NavItem[] = [
   { label: 'Products', href: '/crm/products', icon: Briefcase, module: 'crm' },
   { label: 'Quotes', href: '/crm/quotes', icon: FileText, module: 'crm' },
   { label: 'Campaigns', href: '/crm/campaigns', icon: BarChart3, module: 'crm' },
+  { label: 'Analytics', href: '/crm/analytics', icon: BarChart3, module: 'crm' },
+  { label: 'Forecasting', href: '/crm/forecasting', icon: TrendingUp, module: 'crm' },
+  { label: 'Territories', href: '/crm/territories', icon: MapPin, module: 'crm' },
+  { label: 'Quotas', href: '/crm/quotas', icon: Target, module: 'crm' },
+  { label: 'Compensation', href: '/crm/compensation', icon: DollarSign, module: 'crm' },
+  { label: 'Methodology', href: '/crm/methodology', icon: CheckCircle, module: 'crm' },
+  { label: 'Scorecards', href: '/crm/scorecards', icon: Award, module: 'crm' },
+  { label: 'Support', href: '/crm/support', icon: HelpCircle, module: 'crm' },
+  { label: 'Meetings', href: '/crm/meetings', icon: Video, module: 'crm' },
+  { label: 'Partners', href: '/crm/partners', icon: Users, module: 'crm' },
+  { label: 'Enablement', href: '/crm/enablement', icon: GraduationCap, module: 'crm' },
+  { label: 'Segments', href: '/crm/segments', icon: Filter, module: 'crm' },
   // HR
   { label: 'Employees', href: '/hr/employees', icon: Users, module: 'hr' },
   { label: 'Attendance', href: '/hr/attendance', icon: Clock, module: 'hr' },
