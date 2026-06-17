@@ -149,19 +149,19 @@ export default function DashboardPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div>
-          <h1 className="coda-heading-monument text-4xl text-charcoal mb-2">
+          <h1 className="coda-heading-monument text-2xl sm:text-4xl text-charcoal mb-2">
             Dashboard
           </h1>
-          <p className="text-olive-slate">
+          <p className="text-sm sm:text-base text-olive-slate">
             Welcome back! Here&apos;s an overview of your business.
           </p>
         </div>
 
         <ClockWidget />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {dashboardStats.map((stat) => {
             const Icon = stat.icon
             return (
@@ -169,9 +169,9 @@ export default function DashboardPage() {
                 <Card variant="bordered" className="hover:border-charcoal transition-colors cursor-pointer">
                   <CardContent>
                     <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-sm text-pebble">{stat.label}</p>
-                        <p className="text-2xl font-bold text-charcoal mt-1">
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm text-pebble">{stat.label}</p>
+                        <p className="text-lg sm:text-2xl font-bold text-charcoal mt-1">
                           {loading ? '...' : stat.value}
                         </p>
                       </div>
@@ -189,7 +189,7 @@ export default function DashboardPage() {
           })}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Recent Deals */}
           <Card className="lg:col-span-2">
             <CardHeader>
@@ -308,7 +308,7 @@ export default function DashboardPage() {
             ) : recentTickets.length === 0 ? (
               <p className="text-sm text-pebble text-center py-4">No tickets</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 {recentTickets.map((ticket) => (
                   <Link
                     key={ticket.id}
@@ -352,7 +352,7 @@ export default function DashboardPage() {
             <CardTitle className="text-forest-depths">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <Link href="/crm/contacts">
                 <button className="w-full p-4 rounded-[13px] bg-pure-white border border-sage-mist hover:border-obsidian transition-colors text-left">
                   <Users className="w-5 h-5 text-charcoal mb-2" />

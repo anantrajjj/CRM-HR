@@ -7,7 +7,6 @@ import { useAppStore } from '@/stores/app-store'
 import { Button } from '@/components/ui/button'
 import { logout } from '@/lib/auth'
 import Link from 'next/link'
-import { Badge } from '@/components/ui/badge'
 
 interface Notification {
   id: string
@@ -24,6 +23,7 @@ export function Header() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const notifRef = useRef<HTMLDivElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -92,35 +92,43 @@ export function Header() {
     fetchNotifications()
   }, [setCurrentUser])
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setShowNotifications(false)
       }
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setShowUserMenu(false)
+      }
     }
-    if (showNotifications) document.addEventListener('mousedown', handler)
+    if (showNotifications || showUserMenu) document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
-  }, [showNotifications])
+  }, [showNotifications, showUserMenu])
 
   return (
     <header className="coda-header">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         <Button
           variant="ghost"
           size="sm"
           onClick={toggleSidebar}
-          className="p-2"
+          className="p-2 shrink-0"
         >
           <Menu className="w-5 h-5" />
         </Button>
+        <h1 className="text-sm sm:text-base font-semibold text-charcoal truncate hidden sm:block">
+          CRM+HR Platform
+        </h1>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
           <button
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => {
+              setShowNotifications(!showNotifications)
+              setShowUserMenu(false)
+            }}
             className="relative p-2 hover:bg-bone rounded-[9px] transition-colors"
           >
             <Bell className="w-5 h-5 text-olive-slate" />
@@ -132,7 +140,7 @@ export function Header() {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 top-full mt-2 w-96 bg-pure-white border border-sage-mist rounded-[13px] shadow-lg z-50 overflow-hidden">
+            <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-96 bg-pure-white border border-sage-mist rounded-[13px] shadow-lg z-50 overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-sage-mist">
                 <h3 className="font-semibold text-charcoal text-sm">Notifications</h3>
                 <button
@@ -182,15 +190,18 @@ export function Header() {
         </div>
 
         {/* User Menu */}
-        <div className="relative">
+        <div className="relative" ref={userMenuRef}>
           <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className="flex items-center gap-3 pl-4 border-l border-sage-mist hover:bg-bone rounded-[9px] p-2 transition-colors"
+            onClick={() => {
+              setShowUserMenu(!showUserMenu)
+              setShowNotifications(false)
+            }}
+            className="flex items-center gap-2 sm:gap-3 pl-2 sm:pl-4 border-l border-sage-mist hover:bg-bone rounded-[9px] p-2 transition-colors"
           >
-            <div className="w-8 h-8 bg-mint-sprout rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-mint-sprout rounded-full flex items-center justify-center shrink-0">
               <User className="w-4 h-4 text-forest-depths" />
             </div>
-            <div className="text-sm text-left">
+            <div className="text-sm text-left hidden sm:block">
               <p className="font-medium text-charcoal">
                 {currentUser?.fullName || 'Guest User'}
               </p>
@@ -198,7 +209,7 @@ export function Header() {
                 {currentUser?.role || 'No role assigned'}
               </p>
             </div>
-            <ChevronDown className="w-4 h-4 text-pebble" />
+            <ChevronDown className="w-4 h-4 text-pebble hidden sm:block" />
           </button>
 
           {showUserMenu && (

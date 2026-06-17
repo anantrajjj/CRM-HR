@@ -213,20 +213,20 @@ export function ClockWidget() {
   return (
     <Card variant="bordered">
       <CardContent>
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-4">
-            <div className={`w-14 h-14 rounded-[13px] flex items-center justify-center ${isCheckedIn && !isCheckedOut ? 'bg-mint-sprout' : 'bg-bone'}`}>
-              <Clock className={`w-7 h-7 ${isCheckedIn && !isCheckedOut ? 'text-forest-depths' : 'text-pebble'}`} />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-[13px] flex items-center justify-center ${isCheckedIn && !isCheckedOut ? 'bg-mint-sprout' : 'bg-bone'}`}>
+              <Clock className={`w-6 h-6 sm:w-7 sm:h-7 ${isCheckedIn && !isCheckedOut ? 'text-forest-depths' : 'text-pebble'}`} />
             </div>
             <div>
-              <p className="text-3xl font-bold text-charcoal font-mono tracking-wider">
+              <p className="text-2xl sm:text-3xl font-bold text-charcoal font-mono tracking-wider">
                 {formatTime(currentTime)}
               </p>
-              <p className="text-sm text-olive-slate">{formatDate(currentTime)}</p>
+              <p className="text-xs sm:text-sm text-olive-slate">{formatDate(currentTime)}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
             {isCheckedIn && !isCheckedOut && (
               <div className="text-center px-4">
                 <p className="text-xs text-pebble uppercase tracking-wider">Elapsed</p>

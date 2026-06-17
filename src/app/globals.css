@@ -157,11 +157,17 @@ body {
 .coda-header {
   background: var(--color-cream-parchment);
   border-bottom: 1.5px solid var(--color-sage-mist);
-  padding: var(--spacing-13) var(--spacing-27);
+  padding: var(--spacing-13) var(--spacing-14);
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+@media (min-width: 1024px) {
+  .coda-header {
+    padding: var(--spacing-13) var(--spacing-27);
+  }
 }
 
 /* Pastel Cards */
