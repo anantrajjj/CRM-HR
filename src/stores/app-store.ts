@@ -4,6 +4,7 @@ interface AppState {
   sidebarOpen: boolean
   toggleSidebar: () => void
   setSidebarOpen: (open: boolean) => void
+  initMobile: () => void
   
   currentUser: {
     id: string
@@ -29,9 +30,14 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  sidebarOpen: true,
+  sidebarOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
+  initMobile: () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      set({ sidebarOpen: false })
+    }
+  },
   
   currentUser: null,
   setCurrentUser: (user) => set({ currentUser: user }),
